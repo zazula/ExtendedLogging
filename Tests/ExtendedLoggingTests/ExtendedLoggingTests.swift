@@ -14,6 +14,7 @@ final class ExtendedLoggingTests: XCTestCase {
 
         // Act.
         logger.info("Hello World!")
+        sleep(5)
         
         // Assert.
         let filePath = getFilePathWithDateStamp(fileName: URL(string: "tests01.log")!)
