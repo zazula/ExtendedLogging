@@ -17,9 +17,14 @@ final class ExtendedLoggingTests: XCTestCase {
         
         // Assert.
         let filePath = getFilePathWithDateStamp(fileName: URL(string: "tests01.log")!)
+        
         let fileHandle = try? FileHandle(forReadingFrom: filePath)
-        let fileData = fileHandle?.readDataToEndOfFile()
-        let content = String(data: fileData!, encoding: .utf8)
+        XCTAssertNotNil(fileHandle, "Error during creating file hander (file: \(filePath.absoluteString))")
+        
+        let fileData = fileHandle!.readDataToEndOfFile()
+        XCTAssertNotNil(fileData, "Error during reading content from file (file: \(filePath.absoluteString))")
+        
+        let content = String(data: fileData, encoding: .utf8)
         XCTAssertTrue(content!.contains("[INFO] (mikroservices.mczachurski.dev): Hello World!"))
     }
     
