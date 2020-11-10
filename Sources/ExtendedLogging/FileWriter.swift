@@ -40,14 +40,22 @@ internal class FileWriter {
     private func saveToFile(data: Data) {
         fileQueue.async {
             do {
+                var handle : FileHandle?
+                
                 if let file = self.fileHandle {
-                    file.write(data)
-                    self.fileSize += data.count
+                    handle = file
                 } else if let file = try? FileHandle(forWritingTo: self.filePath) {
                     file.seekToEndOfFile()
+                    handle = file
+                }
+                
+                if let file = handle {
+                    if self.fileSize > self.fileSizeLimitBytes {
+                        // "rewind" existing file so "tail -f" keeps working
+                        try file.seek(toOffset: 0)
+                        try file.truncate(atOffset: 0)
+                    }
                     file.write(data)
-
-                    self.fileHandle = file
                     self.fileSize = self.getFileSize()
                 } else {
                     try data.write(to: self.filePath, options: .atomic)
@@ -61,7 +69,6 @@ internal class FileWriter {
     private func shouldCreateNewFile() -> Bool {
         return self.nextFilePathGenerationDate == nil
             || self.nextFilePathGenerationDate! < Date()
-            || self.fileSize > self.fileSizeLimitBytes
     }
     
     private func setNewFile() {
@@ -139,6 +146,7 @@ internal class FileWriter {
     
     private func getFileSize() -> Int {
         do {
+            self.filePath.removeAllCachedResourceValues()
             let values = try self.filePath.resourceValues(forKeys: [URLResourceKey.fileSizeKey])
             if let fileSize = values.fileSize {
                  return fileSize
