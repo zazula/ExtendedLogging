@@ -58,7 +58,6 @@ internal class FileWriter {
                     file.write(data)
                     self.fileSize = self.getFileSize()
                 } else {
-                    print ("FileWriter: writing by path not handle!!!")
                     try data.write(to: self.filePath, options: .atomic)
                 }
             } catch(let error) {
