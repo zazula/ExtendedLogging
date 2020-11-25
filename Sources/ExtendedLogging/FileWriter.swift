@@ -23,6 +23,7 @@ internal class FileWriter {
             try? file.close()
             self.fileHandle = nil
         }
+        wait()
     }
     
     func write(message: Data?) {
