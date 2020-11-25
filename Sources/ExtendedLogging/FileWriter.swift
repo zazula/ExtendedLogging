@@ -188,10 +188,6 @@ internal class FileWriter {
         }
     }
     
-    private func checkAndRotateLogFile() {
-        
-    }
-    
     // for testing
     func wait() -> Void {
         fileQueue.sync {
