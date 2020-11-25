@@ -55,4 +55,9 @@ public struct FileLogger: LogHandler {
             self.metadata[metadataKey] = newValue
         }
     }
+    
+    // for testing
+    public func wait() -> Void {
+        fileWriter.wait()
+    }
 }
